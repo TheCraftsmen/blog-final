@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Blog</title>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+<body>
+	<div class="container">
+		<h1 class="text-center">Blas Blog</h1>
+		<div class="row">
+			<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#nuevo">Nuevo Post</button>
+			
+		</div><br>
+		<div class="row">
+	  		<div id="nuevo" class="collapse">
+	    		<form id="form" class="form" method="POST" action="http://localhost:1337/post/">
+	    			<div class="form-group">
+	    				<input type="text" name="autor" class="form-control" placeholder="autor">
+	    				
+	    			</div>
+	    			<div class="form-group">
+	    				<input type="text" name="titulo" class="form-control" placeholder="titulo">
+	    				
+	    			</div>
+	    			<div class="form-group">
+	    				<input type="text" name="cuerpo" class="form-control" placeholder="cuerpo">
+	    				
+	    			</div>
+	    			<div class="form-group">
+	    				<input type="submit" name="enviar" value="enviar" class="form-control">
+	    				
+	    			</div>
+	    		</form>
+	  		</div>
+		</div>
+  		<div class="row">
+			<div id="menu">
+				
+			</div>
+  		</div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#form').submit(function(){
+				$.ajax({
+					url:'http://localhost:1337/post/',
+					type:'POST',
+					data: $(this).serialize()
+				});
+				return false;
+			});
+			$.ajax({
+				url:'http://localhost:1337/post/',
+				type:'GET',
+				success: function(data){
+					$.each(data, function(i, task){
+						console.log(task);
+						nuevo_renglon = $('<div></div>');
+						nuevo_renglon.attr('class','panel panel-default');
+						cabecera = $('<div></div>');
+						cabecera.attr('class', 'panel-heading');
+						cabecera.html(task.titulo);
+						cuerpo = $('<div></div>');
+						cuerpo.attr('class', 'panel-body');
+						cuerpo.html(task.cuerpo);
+						autor = $('<div></div>');
+						autor.attr('class', 'panel-footer');
+						autor.html(task.autor);
+						nuevo_renglon.append(cabecera);
+						nuevo_renglon.append(cuerpo);
+						nuevo_renglon.append(autor);
+						$('#menu').append(nuevo_renglon);
+					});
+				},
+				error:function(data){
+					console.log(data);
+				}
+			});
+		});
+	</script>
+
+</body>
+</html>
